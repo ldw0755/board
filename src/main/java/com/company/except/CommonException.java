@@ -11,12 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommonException {
 
-	@ExceptionHandler(Exception.class)
-	public String except(Exception e, Model model) {
-		log.error("Exception....."+e);
-		model.addAttribute("error", e.getMessage());
-		return "except/error";
-	}
+	/*
+	 * @ExceptionHandler(Exception.class) public String except(Exception e, Model
+	 * model) { log.error("Exception....."+e); model.addAttribute("error",
+	 * e.getMessage()); return "except/error"; }
+	 */
 	
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public String notFound(NoHandlerFoundException e) {

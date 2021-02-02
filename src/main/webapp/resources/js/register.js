@@ -32,6 +32,9 @@ $(function(){
 	$("input[type='file']").change(function(){
 		console.log("업로드 호출");
 		
+		console.log(csrfHeaderName);
+		console.log(csrfTokenValue);
+		
 		var inputFile=$("input[name='uploadFile']");
 		console.log(inputFile);
 		
@@ -45,12 +48,16 @@ $(function(){
 			formData.append("uploadFile",files[i]);
 		}
 	
+		//게시물 등록 전 : 첨부 파일은 먼저 서버에 저장된다.
 		$.ajax({
 			url:'/uploadAjax',
 			type:'post',
 			processData:false,	//데이터를 query string 형태로 보낼 것인지 결정(기본값 : application/x-www-form-urlencoded)
 			contentType:false,	//기본값 : application/x-www-form-urlencoded(파일 첨부이므로 multipart/form-data로 보내야 함)
 			data:formData,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue)
+			},
 			success:function(result){
 				showUploadedFile(result);
 				$("input[name='uploadFile']").val("");

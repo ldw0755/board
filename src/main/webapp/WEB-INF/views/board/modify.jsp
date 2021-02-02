@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <link rel="stylesheet" href="/resources/css/mycss.css" />
 <%@include file="../includes/header.jsp"%>
 <div class="row">
@@ -32,9 +33,15 @@
 						<label>Writer</label> <input class="form-control" name="writer"
 							readonly="readonly" value="${board.writer}">
 					</div>
-					<button type="submit" data-oper='modify' class="btn btn-default">Modify</button>
-					<button type="submit" data-oper='remove' class="btn btn-danger">Remove</button>
+					<sec:authentication property="principal" var="info"/>
+					<sec:authorize access="isAuthenticated()">
+						<c:if test="${info.username==board.writer}">
+							<button type="submit" data-oper='modify' class="btn btn-default">Modify</button>
+							<button type="submit" data-oper='remove' class="btn btn-danger">Remove</button>
+						</c:if>
+					</sec:authorize>
 					<button type="submit" data-oper='list' class="btn btn-info">List</button>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				</form>
 			</div>
 		</div>
@@ -65,6 +72,10 @@
 	<input type="hidden" name="amount" value="${cri.amount}" />
 	<input type="hidden" name="type" value="${cri.type}" />
 	<input type="hidden" name="keyword" value="${cri.keyword}"/>
+	<!-- spring security : post 방식의 모든 요청에는 토큰 값이 필요하다. -->
+	<!-- security를 위한 데이터 전송 : board.writer - controller의 사용자 인증에 사용 -->
+	<input type="hidden" name="writer" value="${board.writer}"/>
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </form>
 <%-- 스크립트 --%>
 <script>

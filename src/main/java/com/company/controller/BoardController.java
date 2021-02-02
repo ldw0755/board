@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.accept.PathExtensionContentNegotiationStrategy;
@@ -40,12 +42,14 @@ public class BoardController {
 	private BoardService service;
 
 	// 게시글 작성 폼 보여주기
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/register")
 	public void register() {
 		log.info("register form 요청");
 	}
 
 	// 게시글 작성
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/register")
 	public String registerPost(BoardVO board, RedirectAttributes rttr) {
 		log.info("게시글 등록 : " + board);
@@ -88,7 +92,8 @@ public class BoardController {
 
 	// 특정 게시물 삭제하기
 	@PostMapping("/remove")
-	public String remove(int bno, Criteria cri, RedirectAttributes rttr) {
+	@PreAuthorize("#writer == principal.username")
+	public String remove(int bno, String writer,Criteria cri, RedirectAttributes rttr) {
 		log.info("게시물 삭제" + bno);
 		
 		//게시물 번호에 해당하는 파일 첨부 파일 삭제(서버, 데이터베이스도 삭제)
@@ -145,6 +150,7 @@ public class BoardController {
 	// 데이터 유지 X : redirect 방식
 
 	// 특정 게시물 수정
+	@PreAuthorize("#board.writer == principal.username")	//작성자와 로그인한 정보가 같은지 다시 한번 확인
 	@PostMapping("/modify")
 	public String modify(BoardVO board, Criteria cri, RedirectAttributes rttr) {
 		log.info("게시물 수정 " + board); // 동일한 경로의 post로 이동시 : get에서 받은 데이터 유지 cri != null
