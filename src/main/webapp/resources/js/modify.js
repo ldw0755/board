@@ -139,6 +139,9 @@ $(document).ready(function(){
 			processData:false,	//데이터를 query string 형태로 보낼 것인지 결정(기본값 : application/x-www-form-urlencoded)
 			contentType:false,	//기본값 : application/x-www-form-urlencoded(파일 첨부이므로 multipart/form-data로 보내야 함)
 			data:formData,
+			beforeSend:function(xhr){
+				xhr.setRequestHeader(csrfHeaderName, csrfTokenValue)
+			},
 			success:function(result){
 				showUploadedFile(result);
 				$("input[name='uploadFile']").val("");

@@ -32,9 +32,6 @@ $(function(){
 	$("input[type='file']").change(function(){
 		console.log("업로드 호출");
 		
-		console.log(csrfHeaderName);
-		console.log(csrfTokenValue);
-		
 		var inputFile=$("input[name='uploadFile']");
 		console.log(inputFile);
 		

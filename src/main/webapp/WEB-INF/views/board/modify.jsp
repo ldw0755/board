@@ -57,6 +57,9 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><i class="fa fas fa-file"></i> Files</div>
 			<div class="panel-body">
+				<div class="form-group uploadDiv">
+					<input type="file" name="uploadFile" id="" />
+				</div>
 				<div class="uploadResult">
 					<ul></ul>
 				</div>
@@ -80,6 +83,9 @@
 <%-- 스크립트 --%>
 <script>
 	var bnoVal = ${board.bno};
+	//토큰값 생성
+	var csrfHeaderName = "${_csrf.headerName}";
+	var csrfTokenValue= "${_csrf.token}";
 </script>
 <script src="/resources/js/modify.js"></script>
 <%@include file="../includes/footer.jsp"%>

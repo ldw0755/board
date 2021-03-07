@@ -25,6 +25,7 @@
       </div>    
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>       
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+      <!-- security : 이대우 -->
       <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form> 
     <h3>${error}</h3>  

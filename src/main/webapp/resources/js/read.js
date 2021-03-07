@@ -22,11 +22,13 @@ $(function() {
 		
 		//기본 디자인에서 댓글 입력을 위한 화면으로 변경
 		
-		
 		modal.find("input").val("");
 		
+		//현재 로그인한 사용자 보여주기
+		modalInputReplyer.val(replyer);
+		
 		//readonly 속성 없애기
-		modalInputReplyer.prop("readonly", "");
+		modalInputReplyer.prop("readonly", "readonly");
 		
 		//작성일자 요소를 요소 숨기기
 		modalInputReplyDate.closest("div").hide();	//작성 요소를 감싸고 있는 div를 찾아 hide()해준다.
@@ -141,7 +143,23 @@ $(function() {
 	
 	//댓글 삭제
 	$(modalRemoveBtn).click(function(){
-		replyService.remove(modal.data("rno"), function(result){
+		
+		//로그인 여부 확인
+		if(!replyer){
+			alert("로그인이 필요합니다.");
+			modal.modal("hide");
+			return;
+		}
+		//로그인이 되었다면 로그인한 사용자와 모달창에 있는 사용자가 같은지 확인하기
+		var originalReplyer = modalInputReplyer.val();
+		if(originalReplyer != replyer){
+			alert("자신의 댓글만 삭제 가능합니다.");
+			return;
+		}
+		
+		//댓글 작성자도 컨트롤러로 보내기
+		//댓글 삭제
+		replyService.remove(modal.data("rno"), originalReplyer, function(result){
 			if(result){
 				//alert("result : "+result);
 				modal.modal("hide");
@@ -155,8 +173,23 @@ $(function() {
 	$(modalModBtn).click(function(){
 		var reply={
 					rno:modal.data("rno"),
-					reply:modalInputReply.val()
+					reply:modalInputReply.val(),
+					replyer:modalInputReplyer.val()
 		};
+		
+		//로그인 여부 확인
+		if(!replyer){
+			alert("로그인이 필요합니다.");
+			modal.modal("hide");
+			return;
+		}
+		//로그인이 되었다면 로그인한 사용자와 모달창에 있는 사용자가 같은지 확인하기
+		var originalReplyer = modalInputReplyer.val();
+		if(originalReplyer != replyer){
+			alert("자신의 댓글만 수정이 가능합니다.");
+			return;
+		}
+		
 		replyService.update(reply, function(result){
 			if(result){
 				//alert("result : "+result);
